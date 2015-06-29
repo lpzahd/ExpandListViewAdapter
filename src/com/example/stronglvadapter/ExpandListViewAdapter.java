@@ -416,6 +416,9 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 								// GONE 到当前view
 								coreView.setVisibility(View.GONE);
 								
+								// 更改当前item 的状态
+								bs[currentLevel] = false;
+								
 								hasViewClick = false;
 								// 退出此次点击事件
 								return ;
@@ -456,6 +459,9 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 								
 								// VISIBLE 到当前view
 								coreView.setVisibility(View.VISIBLE);
+								
+								// 更改当前item 的状态
+								bs[currentLevel] = true;
 								
 								hasViewClick = false;
 								// 退出此次点击事件

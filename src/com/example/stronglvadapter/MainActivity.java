@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 		ids.put(0, new int[]{R.id.tv});
 		ids.put(1, new int[]{R.id.btn});
 		ids.put(2, new int[]{0});
-		testAdapter.setIds(ids);
+	//	testAdapter.setIds(ids);
 		
 		lv.setAdapter(testAdapter);
 	}
