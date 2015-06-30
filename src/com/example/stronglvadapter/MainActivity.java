@@ -1,7 +1,10 @@
 package com.example.stronglvadapter;
 
 import java.util.HashMap;
+<<<<<<< HEAD
 import com.example.stronglvadapter.ExpandListViewAdapter.LevelViewOnClickListener;
+=======
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 import android.os.Bundle;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -10,12 +13,17 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Context;
+<<<<<<< HEAD
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+=======
+import android.view.View;
+import android.view.ViewGroup;
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,7 +32,10 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private ListView lv;
+<<<<<<< HEAD
 	private TestAdapter testAdapter;
+=======
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +43,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		lv = (ListView) findViewById(R.id.lv);
 		
+<<<<<<< HEAD
 		testAdapter = new TestAdapter(3,this);
 		
 		HashMap<Integer, boolean[]> ids = new HashMap<Integer, boolean[]>();
@@ -98,6 +110,17 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 			}
 		});
+=======
+		TestAdapter testAdapter = new TestAdapter(3,this);
+		
+		HashMap<Integer, int[]> ids = new HashMap<Integer, int[]>();
+		ids.put(0, new int[]{R.id.tv});
+		ids.put(1, new int[]{R.id.btn});
+		ids.put(2, new int[]{0});
+		testAdapter.setIds(ids);
+		
+		lv.setAdapter(testAdapter);
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 	}
 	
 	class TestAdapter extends ExpandListViewAdapter{
@@ -121,11 +144,15 @@ public class MainActivity extends Activity {
 			return 15;
 		}
 
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 		@Override
 		public View getLevelView(int level,int position, ViewGroup parent,HashMap<String,Object> tag) {
 			switch (level) {
 			case 0:
+<<<<<<< HEAD
 				final View inflate = View.inflate(MainActivity.this, R.layout.tes1t, null);
 				TextView tv = (TextView) inflate.findViewById(R.id.tv);
 				tv.setText("count : "+position);
@@ -141,6 +168,11 @@ public class MainActivity extends Activity {
 						haha = !haha;
 					}
 				});*/
+=======
+				View inflate = View.inflate(MainActivity.this, R.layout.tes1t, null);
+				TextView tv = (TextView) inflate.findViewById(R.id.tv);
+				tv.setText("count : "+position);
+>>>>>>> 3b6d8831990d984105b434a8f702d393c5c55f9d
 				return inflate;
 			case 1:
 				return View.inflate(MainActivity.this, R.layout.tes2t, null);
