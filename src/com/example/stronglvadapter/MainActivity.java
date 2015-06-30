@@ -1,6 +1,7 @@
 package com.example.stronglvadapter;
 
 import java.util.HashMap;
+import com.example.stronglvadapter.ExpandListViewAdapter.LevelViewOnClickListener;
 import android.os.Bundle;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -9,8 +10,12 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private ListView lv;
+	private TestAdapter testAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +32,72 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		lv = (ListView) findViewById(R.id.lv);
 		
-		TestAdapter testAdapter = new TestAdapter(3,this);
+		testAdapter = new TestAdapter(3,this);
 		
-		HashMap<Integer, int[]> ids = new HashMap<Integer, int[]>();
-		ids.put(0, new int[]{R.id.tv});
-		ids.put(1, new int[]{R.id.btn});
-		ids.put(2, new int[]{0});
+		HashMap<Integer, boolean[]> ids = new HashMap<Integer, boolean[]>();
+		ids.put(0, new boolean[]{true,false,true});
+		ids.put(1, new boolean[]{true,true});
+	//	ids.put(2, new boolean[]{false});
+		testAdapter.pointPositionOpenOrClose(false, ids);
+		
+	//	testAdapter.setOpenOrClose(false);
 	//	testAdapter.setIds(ids);
-		
+		testAdapter.setLevelViewOnClickListener(new LevelViewOnClickListener() {
+			
+			@Override
+			public void onClick(View v, int level, boolean isOpen) {
+				// TODO Auto-generated method stub
+				switch (level) {
+				case 0:
+					if(!isOpen){
+						Log.i("hit", "±‰¿∂");
+						v.setBackgroundColor(Color.BLUE);
+					} else {
+						Log.i("hit", "±‰∫Ï");
+						v.setBackgroundColor(Color.RED);
+					}
+					break;
+
+				default:
+					break;
+				}
+				
+			}
+			@Override
+			public void dealWithConvertView(View v, int level, boolean isOpen) {
+				switch (level) {
+				case 0:
+					if(isOpen){
+						Log.i("hit", "¿∂");
+						v.setBackgroundColor(Color.BLUE);
+					} else {
+						Log.i("hit", "∫Ï");
+						v.setBackgroundColor(Color.RED);
+					}
+					break;
+
+				default:
+					break;
+				}
+			}
+
+		});
 		lv.setAdapter(testAdapter);
+		
+		lv.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 	
 	class TestAdapter extends ExpandListViewAdapter{
@@ -58,13 +121,26 @@ public class MainActivity extends Activity {
 			return 15;
 		}
 
+		
 		@Override
 		public View getLevelView(int level,int position, ViewGroup parent,HashMap<String,Object> tag) {
 			switch (level) {
 			case 0:
-				View inflate = View.inflate(MainActivity.this, R.layout.tes1t, null);
+				final View inflate = View.inflate(MainActivity.this, R.layout.tes1t, null);
 				TextView tv = (TextView) inflate.findViewById(R.id.tv);
 				tv.setText("count : "+position);
+			/*	inflate.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						if(haha){
+							inflate.setBackgroundColor(Color.BLUE);
+						} else {
+							inflate.setBackgroundColor(Color.RED);
+						}
+						haha = !haha;
+					}
+				});*/
 				return inflate;
 			case 1:
 				return View.inflate(MainActivity.this, R.layout.tes2t, null);

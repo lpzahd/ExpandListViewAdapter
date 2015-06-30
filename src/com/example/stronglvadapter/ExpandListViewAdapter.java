@@ -45,6 +45,13 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 	// 保存 每层view 中指定的id  Integer --> level
 	private HashMap<Integer,int[]> ids ;
 	
+	//层级view 的点击事件监听
+	public LevelViewOnClickListener mLevelViewOnClickListener;
+	
+	public void setLevelViewOnClickListener(LevelViewOnClickListener mLevelViewOnClickListener) {
+		this.mLevelViewOnClickListener = mLevelViewOnClickListener;
+	}
+	
 	public HashMap<Integer, int[]> getIds() {
 		if(ids != null){
 			return ids;
@@ -78,6 +85,43 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 		this.mContext = mContext;
 		accessLevel();
 	}
+	
+	public void setOpenOrClose(boolean b){
+		int count = getCount();
+		for(int i=0; i<count; i++){
+			for(int j=0; j< level; j++){
+				boolean[] bs = new boolean[level];
+				if(b){
+					bs[j] = true;
+				} else {
+					bs[j] = false;
+				}
+				state.put(i, bs);
+			}
+		}
+	}
+	
+	public void pointPositionOpenOrClose(boolean b,HashMap<Integer, boolean[]> map){
+		setOpenOrClose(b);
+		if(map == null){
+			return ;
+		}
+		for (Integer posi : map.keySet()) {
+			boolean[] bs = map.get(posi);
+			int length = bs.length;
+			boolean[] newBs = new boolean[level];
+			
+			if(length <= level){
+				for(int i=0; i<length; i++){
+					newBs[i] = bs[i];
+				}
+			} else {
+				newBs = bs;
+			}
+			state.put(posi, newBs);
+		}
+	}
+	
 	
 	@Override
 	public int getCount() {
@@ -116,6 +160,11 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 			View currentView = ((LinearLayout) v[level]).getChildAt(0);
 			if(currentView != null){
 				fillLevelView(level,currentView,position,convertView,parent,tag);
+			}
+			
+			//
+			if(mLevelViewOnClickListener != null){
+				mLevelViewOnClickListener.dealWithConvertView(currentView, level, bs[level]);
 			}
 			
 			// 设置v的状态
@@ -210,7 +259,14 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 		View[] views = new View[level];
 		
 		// 保存每层基础样式的状态
-		boolean[] booleans = new boolean[level];
+		boolean[] bs = state.get(position);
+		if(bs == null){
+			bs = new boolean[level];
+			// 将状态保存到 集合 中
+			state.put(position, bs);
+		} else {
+			
+		}
 		
 		// 创建第一梯队视图
 		View firstView = getLevelView(Level_First,position,parent,tag);
@@ -245,9 +301,6 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 			
 		}
 		
-		// 将状态保存到 集合 中
-		state.put(position, booleans);
-
 		// 将views 保存到 集合中
 		tag.put(LevelView, views);
 		
@@ -312,6 +365,13 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 			}
 		}
 		
+		// 关闭动画 
+		public void closeAnim(){
+			if(closeAnim != null){
+				closeAnim.start();
+			}
+		}
+		
 		// 获取view 的 contentView
 		private View getContentView(View v){
 			return levelView.get(v).contentView;
@@ -340,7 +400,7 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 				hasViewClick = true;
 				
 				// 获取当前item 的 状态 
-				final boolean[] bs = getState().get(position);
+				boolean[] bs = getState().get(position);
 				
 				// 第一次给 preOpen 数组赋值
 				if( preOpen == null ){
@@ -379,6 +439,11 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 					return ;
 				}
 				
+				// 如果需要对当前view 进行操作
+				if(mLevelViewOnClickListener!=null){
+					View firstView = ((LinearLayout) contentView).getChildAt(0);
+					mLevelViewOnClickListener.onClick(firstView,currentLevel,bs[currentLevel]);
+				}
 				
 				// 判断当前是否存在（如果点击的是最后一级的view，肯定不存在）
 				if(coreView != null){
@@ -562,5 +627,9 @@ public abstract class ExpandListViewAdapter extends BaseAdapter{
 		public void onAnimationRepeat(Animator animation) {}
 	} 
 	
+	public interface LevelViewOnClickListener {
+		void onClick(View v,int level,boolean isOpen);
+		void dealWithConvertView(View v,int level,boolean isOpen);
+	}
 	
 }
